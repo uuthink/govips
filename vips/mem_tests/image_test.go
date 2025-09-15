@@ -6,9 +6,9 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/davidbyttow/govips/v2/vips"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/uuthink/govips/v2/vips"
 )
 
 func Startup() {

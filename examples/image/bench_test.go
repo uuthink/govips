@@ -2,7 +2,7 @@ package image
 
 import (
 	"fmt"
-	"github.com/davidbyttow/govips/v2/vips"
+	"github.com/uuthink/govips/v2/vips"
 	"runtime"
 	"testing"
 	"time"

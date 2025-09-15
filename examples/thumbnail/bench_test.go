@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/davidbyttow/govips/v2/vips"
+	"github.com/uuthink/govips/v2/vips"
 )
 
 var file = "../../resources/jpg-24bit-icc-iec.jpg"
