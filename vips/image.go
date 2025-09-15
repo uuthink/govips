@@ -546,6 +546,53 @@ func LoadThumbnailFromBuffer(buf []byte, width, height int, crop Interesting, si
 	return ref, nil
 }
 
+// GetSizeParams holds optional parameters for getting image size.
+type GetSizeParams struct {
+	// Autorotate automatically rotates the image based on EXIF orientation tag.
+	// The returned width and height will be adjusted accordingly.
+	Autorotate bool
+}
+
+// GetImageSizeFromFile is a convenience function that calls GetImageSizeFromFileWithParams with default parameters.
+func GetImageSizeFromFile(file string) (width, height int, err error) {
+	return GetImageSizeFromFileWithParams(file, nil)
+}
+
+// GetImageSizeFromFileWithParams gets the width and height of an image from a file path
+// with optional parameters, without decoding the entire pixel data.
+func GetImageSizeFromFileWithParams(file string, params *GetSizeParams) (width, height int, err error) {
+	// Ensure libvips started (implement startupIfNeeded in your package)
+	startupIfNeeded()
+
+	cFilePath := C.CString(file)
+	defer C.free(unsafe.Pointer(cFilePath))
+
+	var img *C.VipsImage
+
+	autorotateFlag := 0
+	if params != nil && params.Autorotate {
+		autorotateFlag = 1
+	}
+
+	// call the C wrapper which returns an int status code
+	rc := C.vips_image_new_from_file_autorotate(cFilePath, &img, C.int(autorotateFlag))
+	if rc != 0 {
+		// read vips error buffer and clear it
+		errStr := C.GoString(C.vips_error_buffer())
+		C.vips_error_clear()
+		return 0, 0, fmt.Errorf("vips: %s", errStr)
+	}
+
+	// ensure we unref the image when done
+	defer C.g_object_unref(C.gpointer(img))
+
+	// Use the official accessors for width/height
+	w := int(C.vips_image_get_width(img))
+	h := int(C.vips_image_get_height(img))
+
+	return w, h, nil
+}
+
 // Metadata returns the metadata (ImageMetadata struct) of the associated ImageRef
 func (r *ImageRef) Metadata() *ImageMetadata {
 	return &ImageMetadata{
