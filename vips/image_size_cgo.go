@@ -18,6 +18,7 @@ static int vips_image_get_orientation_wrapper(VipsImage* img) {
 import "C"
 
 import (
+	"errors"
 	"fmt"
 	"unsafe"
 )
@@ -36,6 +37,10 @@ func GetImageSizeFromFile(file string) (width, height int, err error) {
 // Main implementation
 func GetImageSizeFromFileWithParams(file string, params *GetSizeParams) (width, height int, err error) {
 	startupIfNeeded() // 确保 libvips 初始化（你包里已有实现）
+
+	if file == "" {
+		return 0, 0, errors.New("govips: filename cannot be empty")
+	}
 
 	cFilePath := C.CString(file)
 	defer C.free(unsafe.Pointer(cFilePath))
