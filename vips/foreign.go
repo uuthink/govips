@@ -352,21 +352,25 @@ func maybeSetIntParam(p IntParameter, cp *C.Param) {
 }
 
 func createImportParams(format ImageType, params *ImportParams) C.LoadParams {
-	p := C.create_load_params(C.ImageType(format))
+    p := C.create_load_params(C.ImageType(format))
 
-	maybeSetBoolParam(params.AutoRotate, &p.autorotate)
-	maybeSetBoolParam(params.FailOnError, &p.fail)
-	maybeSetIntParam(params.Page, &p.page)
-	maybeSetIntParam(params.NumPages, &p.n)
-	maybeSetIntParam(params.JpegShrinkFactor, &p.jpegShrink)
-	maybeSetBoolParam(params.HeifThumbnail, &p.heifThumbnail)
-	maybeSetBoolParam(params.SvgUnlimited, &p.svgUnlimited)
-	maybeSetIntParam(params.Access, &p.access)
+    maybeSetBoolParam(params.AutoRotate, &p.autorotate)
+    maybeSetBoolParam(params.FailOnError, &p.fail)
+    maybeSetIntParam(params.Page, &p.page)
+    maybeSetIntParam(params.NumPages, &p.n)
+    maybeSetIntParam(params.JpegShrinkFactor, &p.jpegShrink)
+    if params.FullResolution.IsSet() && params.FullResolution.Get() {
+        C.set_bool_param(&p.heifThumbnail, toGboolean(false))
+    } else {
+        maybeSetBoolParam(params.HeifThumbnail, &p.heifThumbnail)
+    }
+    maybeSetBoolParam(params.SvgUnlimited, &p.svgUnlimited)
+    maybeSetIntParam(params.Access, &p.access)
 
-	if params.Density.IsSet() {
-		C.set_double_param(&p.dpi, C.gdouble(params.Density.Get()))
-	}
-	return p
+    if params.Density.IsSet() {
+        C.set_double_param(&p.dpi, C.gdouble(params.Density.Get()))
+    }
+    return p
 }
 
 func vipsSaveJPEGToBuffer(in *C.VipsImage, params JpegExportParams) ([]byte, error) {

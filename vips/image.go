@@ -106,16 +106,17 @@ func (p *Float64Parameter) Get() float64 {
 // ImportParams are options for loading an image. Some are type-specific.
 // For default loading, use NewImportParams() or specify nil
 type ImportParams struct {
-	AutoRotate  BoolParameter
-	FailOnError BoolParameter
-	Page        IntParameter
-	NumPages    IntParameter
-	Density     IntParameter
+    AutoRotate  BoolParameter
+    FailOnError BoolParameter
+    Page        IntParameter
+    NumPages    IntParameter
+    Density     IntParameter
 
-	JpegShrinkFactor IntParameter
-	HeifThumbnail    BoolParameter
-	SvgUnlimited     BoolParameter
-	Access           IntParameter
+    JpegShrinkFactor IntParameter
+    HeifThumbnail    BoolParameter
+    SvgUnlimited     BoolParameter
+    Access           IntParameter
+    FullResolution   BoolParameter
 }
 
 // NewImportParams creates default ImportParams
@@ -127,35 +128,35 @@ func NewImportParams() *ImportParams {
 
 // OptionString convert import params to option_string
 func (i *ImportParams) OptionString() string {
-	var values []string
-	if v := i.NumPages; v.IsSet() {
-		values = append(values, "n="+strconv.Itoa(v.Get()))
-	}
-	if v := i.Page; v.IsSet() {
-		values = append(values, "page="+strconv.Itoa(v.Get()))
-	}
-	if v := i.Density; v.IsSet() {
-		values = append(values, "dpi="+strconv.Itoa(v.Get()))
-	}
-	if v := i.FailOnError; v.IsSet() {
-		values = append(values, "fail="+boolToStr(v.Get()))
-	}
-	if v := i.JpegShrinkFactor; v.IsSet() {
-		values = append(values, "shrink="+strconv.Itoa(v.Get()))
-	}
-	if v := i.AutoRotate; v.IsSet() {
-		values = append(values, "autorotate="+boolToStr(v.Get()))
-	}
-	if v := i.SvgUnlimited; v.IsSet() {
-		values = append(values, "unlimited="+boolToStr(v.Get()))
-	}
-	if v := i.HeifThumbnail; v.IsSet() {
-		values = append(values, "thumbnail="+boolToStr(v.Get()))
-	}
-	if v := i.Access; v.IsSet() {
-		values = append(values, "access="+strconv.Itoa(v.Get()))
-	}
-	return strings.Join(values, ",")
+    var values []string
+    if v := i.NumPages; v.IsSet() {
+        values = append(values, "n="+strconv.Itoa(v.Get()))
+    }
+    if v := i.Page; v.IsSet() {
+        values = append(values, "page="+strconv.Itoa(v.Get()))
+    }
+    if v := i.Density; v.IsSet() {
+        values = append(values, "dpi="+strconv.Itoa(v.Get()))
+    }
+    if v := i.FailOnError; v.IsSet() {
+        values = append(values, "fail="+boolToStr(v.Get()))
+    }
+    if v := i.JpegShrinkFactor; v.IsSet() {
+        values = append(values, "shrink="+strconv.Itoa(v.Get()))
+    }
+    if v := i.AutoRotate; v.IsSet() {
+        values = append(values, "autorotate="+boolToStr(v.Get()))
+    }
+    if v := i.SvgUnlimited; v.IsSet() {
+        values = append(values, "unlimited="+boolToStr(v.Get()))
+    }
+    if v := i.HeifThumbnail; v.IsSet() {
+        values = append(values, "thumbnail="+boolToStr(v.Get()))
+    }
+    if v := i.Access; v.IsSet() {
+        values = append(values, "access="+strconv.Itoa(v.Get()))
+    }
+    return strings.Join(values, ",")
 }
 
 func boolToStr(v bool) string {
