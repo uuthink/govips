@@ -10,6 +10,12 @@ static VipsImage* vips_image_new_from_file_simple(const char* name) {
     return vips_image_new_from_file(name, NULL);
 }
 
+// wrapper: return VipsImage* (NULL on error) from buffer.
+static VipsImage* vips_image_new_from_buffer_simple(const void* buf, size_t len) {
+    // Option string NULL, varargs terminated with NULL
+    return vips_image_new_from_buffer(buf, len, NULL, NULL);
+}
+
 // get orientation (thin wrapper not strictly necessary but keeps C declarations together)
 static int vips_image_get_orientation_wrapper(VipsImage* img) {
     return vips_image_get_orientation(img);
